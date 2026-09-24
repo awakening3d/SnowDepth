@@ -1,0 +1,343 @@
+{
+	"ID": "0942a20b4eeab039f842cc86fefac3cc",
+	"TypeName": "FlaxEngine.SceneAsset",
+	"EngineBuild": 6915,
+	"Data": [
+		{
+			"ID": "0942a20b4eeab039f842cc86fefac3cc",
+			"TypeName": "FlaxEngine.Scene",
+			"LightmapSettings": {
+				"IndirectLightingIntensity": 1.0,
+				"GlobalObjectsScale": 1.0,
+				"ChartsPadding": 3,
+				"AtlasSize": 1024,
+				"BounceCount": 1,
+				"CompressLightmaps": true,
+				"UseGeometryWithNoMaterials": true,
+				"Quality": 10
+			}
+		},
+		{
+			"ID": "67adcbcd458ccd04913093ab0e99516e",
+			"TypeName": "FlaxEngine.DirectionalLight",
+			"ParentID": "0942a20b4eeab039f842cc86fefac3cc",
+			"Name": "Sun",
+			"Transform": {
+				"Translation": {
+					"X": 40.0,
+					"Y": 160.0,
+					"Z": 0.0
+				},
+				"Orientation": {
+					"X": 0.2930585443973541,
+					"Y": -0.7276135087013245,
+					"Z": 0.06347247213125229,
+					"W": 0.6169818043708801
+				}
+			},
+			"ShadowsDepthBias": 0.021299999207258224
+		},
+		{
+			"ID": "f1bd13c64694c000b0c299b12434f2f9",
+			"TypeName": "FlaxEngine.Sky",
+			"ParentID": "0942a20b4eeab039f842cc86fefac3cc",
+			"Name": "Sky",
+			"Transform": {
+				"Translation": {
+					"X": 40.0,
+					"Y": 150.0,
+					"Z": 0.0
+				}
+			},
+			"Sun": "67adcbcd458ccd04913093ab0e99516e"
+		},
+		{
+			"ID": "7c13cdbf411bbc0b4f568e97692d252f",
+			"TypeName": "FlaxEngine.SkyLight",
+			"ParentID": "0942a20b4eeab039f842cc86fefac3cc",
+			"Name": "SkyLight",
+			"Brightness": 2.5,
+			"CustomTexture": "c54410104ff39427bc11e5bc761d66b0"
+		},
+		{
+			"ID": "2046df934cc456f0a31c0ea043ebcb32",
+			"TypeName": "FlaxEngine.Camera",
+			"ParentID": "0942a20b4eeab039f842cc86fefac3cc",
+			"Name": "Camera",
+			"Transform": {
+				"Translation": {
+					"X": 2930.50634765625,
+					"Y": -495.8476257324219,
+					"Z": 2219.052490234375
+				},
+				"Orientation": {
+					"X": 0.055607959628105164,
+					"Y": 0.40180128812789917,
+					"Z": -0.02445344254374504,
+					"W": 0.9137097597122192
+				}
+			}
+		},
+		{
+			"ID": "424d61f24d4c9abe38cfa18fcaa3a13f",
+			"TypeName": "FlaxEngine.AudioListener",
+			"ParentID": "2046df934cc456f0a31c0ea043ebcb32",
+			"Name": "Audio Listener"
+		},
+		{
+			"ID": "8e7ba64a4e5cc96f628b28a133f451c5",
+			"TypeName": "FlaxEngine.Terrain",
+			"ParentID": "0942a20b4eeab039f842cc86fefac3cc",
+			"Name": "Terrain",
+			"Transform": {
+				"Translation": {
+					"X": 0.0,
+					"Y": -2500.0,
+					"Z": 0.0
+				},
+				"Scale": {
+					"X": 0.20000000298023224,
+					"Y": 1.0,
+					"Z": 0.20000000298023224
+				}
+			},
+			"Material": "56df9d674def91f7dc4f039cee6a0ed9",
+			"LODCount": 4,
+			"ChunkSize": 127,
+			"Patches": [
+				{
+					"X": 0,
+					"Z": 0,
+					"Offset": 743.408203125,
+					"Height": 2602.671630859375,
+					"Heightmap": "7fab5a804136f016b47d0cafa3c55cfc",
+					"Splatmap0": "fbf7ff114ee736d3944faa84747eab18",
+					"Splatmap1": "00000000000000000000000000000000",
+					"Heightfield": "f62ff71b4557f2e7bf3e5396ea873013",
+					"Chunks": [
+						{
+							"Offset": 743.408203125,
+							"Height": 487.6708984375,
+							"Material": "00000000000000000000000000000000"
+						},
+						{
+							"Offset": 869.140625,
+							"Height": 874.0234375,
+							"Material": "00000000000000000000000000000000"
+						},
+						{
+							"Offset": 1528.3203125,
+							"Height": 800.375244140625,
+							"Material": "00000000000000000000000000000000"
+						},
+						{
+							"Offset": 786.7431640625,
+							"Height": 1075.04052734375,
+							"Material": "00000000000000000000000000000000"
+						},
+						{
+							"Offset": 1073.4017333984375,
+							"Height": 847.9849853515625,
+							"Material": "00000000000000000000000000000000"
+						},
+						{
+							"Offset": 1231.0791015625,
+							"Height": 960.0830078125,
+							"Material": "00000000000000000000000000000000"
+						},
+						{
+							"Offset": 1645.5078125,
+							"Height": 1269.2236328125,
+							"Material": "00000000000000000000000000000000"
+						},
+						{
+							"Offset": 1587.00048828125,
+							"Height": 1352.45263671875,
+							"Material": "00000000000000000000000000000000"
+						},
+						{
+							"Offset": 1700.9776611328125,
+							"Height": 983.9307861328125,
+							"Material": "00000000000000000000000000000000"
+						},
+						{
+							"Offset": 1879.8828125,
+							"Height": 1255.851806640625,
+							"Material": "00000000000000000000000000000000"
+						},
+						{
+							"Offset": 2020.263671875,
+							"Height": 1163.330078125,
+							"Material": "00000000000000000000000000000000"
+						},
+						{
+							"Offset": 1825.95068359375,
+							"Height": 1389.0546875,
+							"Material": "00000000000000000000000000000000"
+						},
+						{
+							"Offset": 1343.792236328125,
+							"Height": 813.190185546875,
+							"Material": "00000000000000000000000000000000"
+						},
+						{
+							"Offset": 1884.8330078125,
+							"Height": 1461.246826171875,
+							"Material": "00000000000000000000000000000000"
+						},
+						{
+							"Offset": 1838.4847412109375,
+							"Height": 1466.9486083984375,
+							"Material": "00000000000000000000000000000000"
+						},
+						{
+							"Offset": 1019.287109375,
+							"Height": 1209.947509765625,
+							"Material": "00000000000000000000000000000000"
+						}
+					]
+				}
+			]
+		},
+		{
+			"ID": "4bacbde64ec182ec20231e8df62a83f7",
+			"TypeName": "FlaxEngine.CharacterController",
+			"ParentID": "0942a20b4eeab039f842cc86fefac3cc",
+			"Name": "FPSPlayer",
+			"Transform": {
+				"Translation": {
+					"X": 4084.507568359375,
+					"Y": -622.0599365234375,
+					"Z": 3727.275390625
+				}
+			},
+			"StaticFlags": 0,
+			"Layer": 1,
+			"Tag": "Player",
+			"Height": 100.0
+		},
+		{
+			"ID": "7237c6aa4fc3d8ea90830e92eafbd833",
+			"TypeName": "PlayerScript",
+			"ParentID": "4bacbde64ec182ec20231e8df62a83f7",
+			"V": {
+	"PlayerController": "4bacbde64ec182ec20231e8df62a83f7",
+	"CameraTarget": "701edcce4b07dd5de72bb48244b4d1ea",
+	"Camera": "2046df934cc456f0a31c0ea043ebcb32",
+	"SphereModel": "e573d5ca49210c5230e55ea7405519c8"
+}
+		},
+		{
+			"ID": "66ac4f8c4cc037a632e44f88820324b3",
+			"TypeName": "FlaxEngine.StaticModel",
+			"ParentID": "4bacbde64ec182ec20231e8df62a83f7",
+			"IsActive": false,
+			"Name": "Cylinder",
+			"StaticFlags": 0,
+			"Layer": 1,
+			"Tag": "Player",
+			"Model": "223aa9894e90973780ab508621517526",
+			"Buffer": {
+				"Entries": [
+					{
+						"Material": "00000000000000000000000000000000",
+						"ShadowsMode": 3,
+						"Visible": true,
+						"ReceiveDecals": true
+					}
+				]
+			}
+		},
+		{
+			"ID": "b4c53e774413b336dcbc18925ca21788",
+			"TypeName": "FlaxEngine.StaticModel",
+			"ParentID": "4bacbde64ec182ec20231e8df62a83f7",
+			"IsActive": false,
+			"Name": "Bottom Sphere",
+			"Transform": {
+				"Translation": {
+					"X": 0.0,
+					"Y": -50.0,
+					"Z": 0.0
+				}
+			},
+			"StaticFlags": 0,
+			"Layer": 1,
+			"Tag": "Player",
+			"Model": "dd86c4724bf734c4959d23b3c74faa05",
+			"Buffer": {
+				"Entries": [
+					{
+						"Material": "00000000000000000000000000000000",
+						"ShadowsMode": 3,
+						"Visible": true,
+						"ReceiveDecals": true
+					}
+				]
+			}
+		},
+		{
+			"ID": "cd2c3015443da8caf11e0881196bb016",
+			"TypeName": "FlaxEngine.StaticModel",
+			"ParentID": "4bacbde64ec182ec20231e8df62a83f7",
+			"IsActive": false,
+			"Name": "Upper Sphere",
+			"Transform": {
+				"Translation": {
+					"X": 0.0,
+					"Y": 50.0,
+					"Z": 0.0
+				}
+			},
+			"StaticFlags": 0,
+			"Layer": 1,
+			"Tag": "Player",
+			"Model": "dd86c4724bf734c4959d23b3c74faa05",
+			"Buffer": {
+				"Entries": [
+					{
+						"Material": "00000000000000000000000000000000",
+						"ShadowsMode": 3,
+						"Visible": true,
+						"ReceiveDecals": true
+					}
+				]
+			}
+		},
+		{
+			"ID": "701edcce4b07dd5de72bb48244b4d1ea",
+			"TypeName": "FlaxEngine.EmptyActor",
+			"ParentID": "4bacbde64ec182ec20231e8df62a83f7",
+			"Name": "Cam Target",
+			"Transform": {
+				"Translation": {
+					"X": 0.0,
+					"Y": 70.0,
+					"Z": 0.0
+				}
+			},
+			"StaticFlags": 0,
+			"Layer": 1,
+			"Tag": "Player"
+		},
+		{
+			"ID": "6c1f6151474ed71885161fbd63da65a0",
+			"TypeName": "FlaxEngine.EmptyActor",
+			"ParentID": "0942a20b4eeab039f842cc86fefac3cc",
+			"Name": "SnowManager"
+		},
+		{
+			"ID": "c681f9ad44f99255955f8a8d2516667d",
+			"TypeName": "SnowDepthRTManager",
+			"ParentID": "6c1f6151474ed71885161fbd63da65a0",
+			"V": {
+	"TerrainSnowMaterial": "56df9d674def91f7dc4f039cee6a0ed9",
+	"ClearTextureShader": "0000076cf23c2c710000004300000046",
+	"FootprintDrawShader": "00000898c5a7ebf20000004400000046",
+	"DepthRecoverShader": "000004b0199b1bf00000004400000072",
+	"RecoverSpeed": 0.0058085616,
+	"player": "4bacbde64ec182ec20231e8df62a83f7"
+}
+		}
+	]
+}

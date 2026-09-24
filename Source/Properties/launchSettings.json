@@ -1,0 +1,11 @@
+﻿{
+  "profiles": {
+    "Game": {
+      "commandName": "Executable",
+      "workingDirectory": "N:/Flax/projs/SnowDepth",
+      "executablePath": "N:/Flax/Flax_1.12/Binaries/Editor/Win64/$(FlaxConfiguration)/FlaxEditor.exe",
+      "commandLineArgs": "-project \"N:/Flax/projs/SnowDepth\"",
+      "nativeDebugging": false
+    }
+  }
+}
