@@ -84,17 +84,17 @@ public class SnowDepthRTManager : Script
         public float FillValue;
     }
 
-
+	
 	// 脚印绘制CS常量缓冲区
 	[StructLayout(LayoutKind.Sequential)]
 	private struct FootprintCSData
 	{
-		public Vector2 CenterUV;   // 已预乘 Aspect
-		public float Radius;       // = worldRadius / RTWorldSize.Y
+		public Vector2 PixelCenter;   // 像素中心,已对齐 +0.5
+		public float PixelRadius;     // 像素半径,X/Y 方向取小值
 		public float DepthOffset;
-		public Int2 StartOffset;
-		public float Aspect;       // = RTWorldSize.X / RTWorldSize.Y
-}	
+		public Int2 StartOffset;      // 包围盒左上角
+	}	
+
 
     // 积雪恢复CS常量缓冲区
     [StructLayout(LayoutKind.Sequential)]
@@ -144,12 +144,12 @@ public class SnowDepthRTManager : Script
 		}
 
 	
-        // 创建R16_UNorm RT，支持UAV写入、RT、Shader采样
+        // Create Depth Texture
         _rtDesc = GPUTextureDescription.New2D(
             RTResolution.X,
             RTResolution.Y,
-            PixelFormat.R16_UNorm,
-            GPUTextureFlags.RenderTarget | GPUTextureFlags.UnorderedAccess | GPUTextureFlags.ShaderResource
+            PixelFormat.R16_UNorm, // R8_UNorm also works
+            GPUTextureFlags.UnorderedAccess | GPUTextureFlags.ShaderResource  // | GPUTextureFlags.RenderTarget
         );
         _snowDepthRT = new GPUTexture();
         bool initrt = _snowDepthRT.Init(ref _rtDesc);
@@ -298,7 +298,7 @@ public class SnowDepthRTManager : Script
         LogDebug("[SnowRT Fill] fill texture2d done");
     }
 
-	// CS绘制圆形脚印黑斑；局部包围盒Dispatch，只在脚印区域执行计算
+	// CS绘制圆形脚印黑斑,局部包围盒Dispatch,只在脚印区域执行计算
 	void DrawFootprintCS(GPUContext context, Vector2 footWorldPos, float worldRadius, float pressure)
 	{
 		if (_footprintDrawGpuShader == null || _snowDepthRT == null)
@@ -311,35 +311,39 @@ public class SnowDepthRTManager : Script
 		Vector2 localPos = footWorldPos - WindowOrigin;
 		Vector2 uvCenter = localPos / RTWorldSize;
 
-		// === 非正方形补偿 ===
-		// 把 UV 空间 X 方向乘 aspect，使缩放后的坐标系和世界空间"等比"，
-		// 这样 SHADER 里 length(delta) 得到的距离，等价于世界空间距离 / RTWorldSize.Y。
-		// 正方形下 aspect = 1，行为完全不变。
-		float aspect = RTWorldSize.X / RTWorldSize.Y;
-		Vector2 uvCenterAdjusted = new Vector2(uvCenter.X * aspect, uvCenter.Y);
-		float uvRadius = worldRadius / RTWorldSize.Y;
+		LogDebug($"[SnowRT Draw] Foot UV Center:{uvCenter}, worldRadius:{worldRadius}, pressure:{pressure}");
 
-		LogDebug($"[SnowRT Draw] Foot UV Center:{uvCenterAdjusted}, uvRadius:{uvRadius}, aspect:{aspect}, pressure:{pressure}");
-
-		// 坐标超出RT窗口范围，直接跳过绘制（用原始 UV 判断）
+		// 坐标超出RT窗口范围,直接跳过绘制
 		if (uvCenter.X < 0 || uvCenter.Y < 0 || uvCenter.X > 1 || uvCenter.Y > 1)
 		{
-			LogDebug("[SnowRT Draw] UV超出0~1范围，跳过");
+			LogDebug("[SnowRT Draw] UV超出0~1范围,跳过");
 			return;
 		}
 
-		// UV转像素包围盒
-		// 像素空间里脚印是圆（世界圆 → UV 椭圆 → 像素圆，因 RTWorldSize 与 RT 宽高比同步）
+		// UV转像素中心
 		float pixelCenterX = uvCenter.X * _rtDesc.Width;
 		float pixelCenterY = uvCenter.Y * _rtDesc.Height;
-		float pixelRadius  = uvRadius * _rtDesc.Height;
 
+		// 每像素世界尺寸,分别算 X 和 Y 方向
+		float worldPerPixelX = RTWorldSize.X / _rtDesc.Width;
+		float worldPerPixelY = RTWorldSize.Y / _rtDesc.Height;
+
+		// 像素半径,取 X/Y 方向的较小值,保证圆斑在 RT 里是正圆不变形
+		float pixelRadiusX = worldRadius / worldPerPixelX;
+		float pixelRadiusY = worldRadius / worldPerPixelY;
+		float pixelRadius = Math.Min(pixelRadiusX, pixelRadiusY);
+
+		// 包围盒
 		int minX = (int)Math.Max(0, pixelCenterX - pixelRadius);
 		int minY = (int)Math.Max(0, pixelCenterY - pixelRadius);
 		int maxX = (int)Math.Min(_rtDesc.Width, pixelCenterX + pixelRadius);
 		int maxY = (int)Math.Min(_rtDesc.Height, pixelCenterY + pixelRadius);
 
-		// 对齐8x8线程组，计算Dispatch范围
+		// 保证包围盒至少 1 像素,解决时有时无问题
+		if (maxX <= minX) maxX = minX + 1;
+		if (maxY <= minY) maxY = minY + 1;
+
+		// 对齐8x8线程组,计算Dispatch范围
 		int groupMinX = minX / 8;
 		int groupMinY = minY / 8;
 		int groupMaxX = (maxX + 7) / 8;
@@ -349,23 +353,26 @@ public class SnowDepthRTManager : Script
 		uint groupsY = (uint)(groupMaxY - groupMinY);
 		if (groupsX <= 0 || groupsY <= 0)
 		{
-			LogDebug("[SnowRT Draw] 线程组数量<=0，跳过");
+			LogDebug("[SnowRT Draw] 线程组数量<=0,跳过");
 			return;
 		}
-		LogDebug($"[SnowRT Draw] Dispatch groupsX:{groupsX}, groupsY:{groupsY}");
+		LogDebug($"[SnowRT Draw] Dispatch groupsX:{groupsX}, groupsY:{groupsY}, pixelRadius:{pixelRadius}");
+
+		// 把中心对齐到像素中心(+0.5),解决时深时浅问题
+		float alignedPixelCenterX = (float)Math.Floor(pixelCenterX) + 0.5f;
+		float alignedPixelCenterY = (float)Math.Floor(pixelCenterY) + 0.5f;
 
 		FootprintCSData data;
-		data.CenterUV = uvCenterAdjusted;      // 用 adjusted
-		data.Radius = uvRadius;        // 用 adjusted
+		data.PixelCenter = new Vector2(alignedPixelCenterX, alignedPixelCenterY);
+		data.PixelRadius = pixelRadius;
 		data.DepthOffset = -pressure;
 		data.StartOffset = new Int2(minX, minY);
-		data.Aspect = aspect;                  // 新增
 
 		IntPtr csPtr = _footprintDrawGpuShader.GetCS("CS");
 		IntPtr cbPtr = _footprintDrawGpuShader.GetCB(0);
 		if (csPtr == IntPtr.Zero || cbPtr == IntPtr.Zero)
 		{
-			LogDebug("[SnowRT Draw] Footprint CS/CB句柄为空，检查HLSL入口名");
+			LogDebug("[SnowRT Draw] Footprint CS/CB句柄为空,检查HLSL入口名");
 			return;
 		}
 
